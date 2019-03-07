@@ -33,12 +33,16 @@ function generate_node_dockerfile {
 
 function generate_ndk_dockerfiles {
   local api_level=$1
-  local ndk_variant_tag=api-${api_level}-ndk
 
-  ndk_variant_dockerfile=$(generate_api_dockerfile ${api_level} ${ndk_variant_tag})
+  for NDKR in ${ANDROID_NDK_REVSIONS}; do
+    local ndk_variant_tag=api-${api_level}-ndk-${NDKR}
 
-  # create specific NDK dockerfiles (call m4 here when we want multiple NDK versions)
-  cat Dockerfile-ndk.template >> "${ndk_variant_dockerfile}"
+    ndk_variant_dockerfile=$(generate_api_dockerfile ${api_level} ${ndk_variant_tag})
+
+    # create specific NDK dockerfiles (call m4 here when we want multiple NDK versions)
+    echo -e "\nARG ndk_revision=${NDKR}" >>  "${ndk_variant_dockerfile}"
+    cat Dockerfile-ndk.template >> "${ndk_variant_dockerfile}"
+  done
 }
 
 function generate_dockerfiles {

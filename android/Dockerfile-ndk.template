@@ -1,4 +1,3 @@
-
 ARG ndk_version=android-ndk-${ndk_revision}
 ARG android_ndk_home=/opt/android/${ndk_version}
 
